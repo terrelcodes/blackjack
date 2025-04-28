@@ -14,6 +14,27 @@ h1 {
 #message-el {
     font-style: italic;
 }
+#game {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1em;
+}
+#game > div {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    min-height: 50vh;
+}
+#game * li {
+    color: goldenrod;
+    list-style: none;
+    background-color: #016f32;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px 0;
+}
 .stack {
     display: flex;
     flex-direction: column;
