@@ -1,0 +1,95 @@
+ <svg width="2.5in" height="3.5in" version="1.1" viewBox="-1 -1 252 352" xmlns="http://www.w3.org/2000/svg">
+ 
+<style>
+  text {
+    font-family: serif;
+    font-weight: bold;
+    text-anchor: middle;
+  }
+  #box-sm {
+    stroke: none;
+    fill: goldenrod;
+  }
+  #border {
+    stroke: red;
+    fill: white;
+  }
+    #box {
+        fill: wheat;
+    }  
+
+  .verso {
+    fill: linear-gradient(.15turn, #3f87a6, #ebf8e1, #f69d3c);;
+  } 
+</style>
+<defs>
+
+ <path id="border" d="M14 0 
+  h 222 a 14 14 0 0 1 14 14 
+  v 322 a 14 14 0 0 1 -14 14 
+  h-222 a 14 14 0 0 1 -14 -14 
+  v-322 a 14 14 0 0 1 14 -14 
+  z" stroke-width="1" stroke="red" fill="white"/>
+  <path id="box" d="M20 20 h 210 v 310 h -210 z" fill="wheat"/>
+  <path id="box-sm" d="M30 30 h 80 v 80 h -80 z" stroke-width="1" stroke="none" fill="goldenrod"/>
+    <path id="heart" d="M 0,0 m 40,20
+        a 20,20 0,0,1 40,0
+        q 0,30 -40,60
+        q -40,-30 -40,-60 
+        a 20,20 0,0,1 40,0
+        z" fill="red"/>
+    <path id="diamond" d="M 0,0 m 40,0
+        q 12,23 30,40
+        q -18,17 -30, 40
+        q -12,-23 -30,-40
+        q 18,-17 30,-40
+        z" fill="red"/>
+    <path id="spade" d="M 0,0 m 35,80
+        h 12
+        q -3,-12.5 -2,-25
+        a 14,14 0,1,0 28,0
+        q 0,-30 -32,-55
+        q -32,30 -32,55 
+        a 14,14 0,1,0 28,0
+        q 1,12.5 -2,25
+        z" fill="black"/>
+    <path id="club" d="M 0,0 m 40,80
+        h 15
+        q -5,-14.5 -5,-27
+        a 16,16 0,1,0 5,-30
+        a 16,16 0,1,0 -30,0
+        a 16,16 0,1,0 5,30
+        q 0,14.5 -5,27
+        h 15
+        z" fill="black"/>
+
+    <g id="card">
+        <use href="#border"/>
+        <use href="#box"/>
+        <use href="#box-sm" x="110" y="0"/>
+        <use href="#box-sm" x="0" y="90"/>
+        <use href="#box-sm" x="110" y="90"/>
+        <use href="#heart" x="40" y="40" class="verso"/>
+        </g>
+</defs>
+<use href="#card" x="0" y="0"/>
+  <use href="#diamond" x="140" y="40"/>
+  <use href="#spade" x="40" y="140"/>
+  <use href="#club" x="140" y="140"/>
+  
+    <text x="50" y="50"  font-size="40" fill="black">A</text>
+    <text x="50" y="90"  font-size="40" fill="black">2</text>
+    <text x="50" y="130" font-size="40" fill="black">3</text>
+    <text x="50" y="170" font-size="40" fill="black">4</text>
+    <text x="50" y="210" font-size="40" fill="black">5</text>
+    <text x="50" y="250" font-size="40" fill="black">6</text>
+    <text x="50" y="290" font-size="40" fill="black">7</text>
+
+    <text x="150" y="50"  font-size="40" fill="black">8</text>
+    <text x="150" y="90"  font-size="40" fill="black">9</text>
+    <text x="150" y="130" font-size="40" fill="black">10</text>
+    <text x="150" y="170" font-size="40" fill="black">J</text>       
+    <text x="150" y="210" font-size="40" fill="black">Q</text>
+    <text x="150" y="250" font-size="40" fill="black">K</text> 
+
+</svg>
