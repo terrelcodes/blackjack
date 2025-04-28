@@ -101,36 +101,229 @@ function shuffle(arr) {
     shuffled.push(...arr)
     shuffled.push(...arr)
 
-  
     // Fisher-Yates shuffle (in-place)
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // Swap elements
     }
-    return shuffled;
+    return shuffled
 }
+
+function CardBox (deck) {
+    let cards = null
+    function draw() {
+        if (cards === undefined || cards === null || cards.length === 0) {
+            cards = shuffle(deck).slice(0, 52*4) // reshuffle the deck after 208 cards are drawn
+            console.log("cards shuffled")
+        }
+        return cards.pop()
+    }
+    return draw
+}
+
+const draw = CardBox(deck)
+
+
+class Player {
+    constructor(name) {
+        this.name = name
+        this.hand = []
+    }
+    getName() {
+        return this.name
+    }
+    drawCard() {        
+        let card = draw()
+        this.hand.push(card)
+        let newCard = document.createElement("li")
+        newCard.textContent = card.toString()
+        this.handEl.appendChild(newCard)
+    }
+
+    start(){
+        this.state = "playing"
+        this.hand = [] 
+        this.handEl.innerHTML = ""
+        this.sumEl.innerHTML = ""
+        this.messageEl.textContent = ""
+        this.drawCard()
+        this.drawCard()
+        total = evaluateHand(this.hand).total
+        if (total === 21) {
+            this.messageEl.textContent = `Blackjack! You have a total of ${total} 🎉`
+            this.state = "won"
+        } else {
+            this.messageEl.textContent = `You have a total of ${total} 🙂`
+        }  
+        this.sumEl.textContent = total
+    }
+
+    hit(){  
+        if (this.state !== "playing") {
+            this.messageEl.textContent = `You can't hit, you already ${this.state}.`
+            return
+        }
+        this.drawCard()
+        let total = evaluateHand(this.hand).total
+        if (total > 21) {
+            this.messageEl.textContent = `You busted with a total of ${total} 😭`
+            this.state = "lost"
+        } else if (total === 21) {
+            this.messageEl.textContent = `Blackjack! You have a total of ${total} 🎉`
+            this.state = "won"
+        } else {
+            this.messageEl.textContent = `You have a total of ${total} 🙂`
+        }
+        this.sumEl.textContent = total
+    }
+    stand() {
+        if (this.state !== "playing") {
+            this.messageEl.textContent = `You can't stand, you already ${this.state}.`
+            return
+        }
+        this.messageEl.textContent = `You chose to stand with a total of ${evaluateHand(this.hand).total} 🙂`
+        this.state = "stood"
+    }
   
 
-
-
-let cards = shuffle(deck)
-
-
-let message = ""
-
-const messageEl = document.getElementById("message-el")
-const handEl = document.getElementById("cards-el")
-
-function draw() {
-    if (cards.length === 0) {
-        cards = shuffle(deck) 
+    attach(rootEl){
+        this.rootEl = rootEl
+        let nameEl = document.createElement("h2")
+        nameEl.textContent = this.name
+        this.rootEl.appendChild(nameEl)
+        this.handEl = document.createElement("ul")
+        this.hand.forEach( (card)=>{
+            let newCard = document.createElement("li")
+            newCard.textContent = card.toString()
+            this.rootEl.appendChild(newCard)
+        })
+        this.rootEl.appendChild(this.handEl)
+        this.sumEl = document.createElement("p")
+        this.rootEl.appendChild(this.sumEl)
+        this.messageEl = document.createElement("p")
+        this.rootEl.appendChild(this.messageEl)
+        this.rootEl.classList.add("player")
     }
-    let card  = cards.pop()
-
-    message = `You drew a ${card.toString()} 🙂 (${cards.length} left)`
-    messageEl.textContent=message
-    let newCard = document.createElement("li")
-    newCard.textContent = card.toString()
-    handEl.appendChild(newCard)
-
 }
+class Dealer {
+    constructor() {
+        this.hand = []
+    }
+    start() {
+        this.state = "playing"
+        this.hand = []
+        this.handEl.innerHTML = ""
+        this.sumEl.textContent = "hidden"
+        this.messageEl.textContent = ""
+        this.drawCard(true)
+        this.drawCard()
+    }
+
+    drawCard(hidden=false) {
+        let card = draw()
+        this.hand.push(card)
+        let newCard = document.createElement("li")
+        if (hidden) {
+            newCard.textContent = "Hidden Card"
+        } else {
+            newCard.textContent = card.toString()
+        }
+        this.handEl.appendChild(newCard)
+    }
+
+
+    play() {
+        let { soft, total } = evaluateHand(this.hand)
+        while (total < 17) {
+            this.drawCard()
+            total = evaluateHand(this.hand).total
+        }
+        let message = ""
+        if (total > 21) {
+            message = `Dealer busted with a total of ${total} 😭`
+        } else if (total === 21) {
+            message = `Dealer has a blackjack with a total of ${total} 🎉`
+        } else {
+            message = `Dealer has a total of ${total} 🙂`
+        }
+        this.sumEl.textContent = total
+        this.messageEl.textContent = message
+        this.handEl.innerHTML = ""
+        this.hand.forEach( (card)=>{
+            let newCard = document.createElement("li")
+            newCard.textContent = card.toString()
+            this.handEl.appendChild(newCard)
+        })
+    }
+
+
+    attach(rootEl){
+        this.rootEl = rootEl
+        let nameEl = document.createElement("h2")
+        nameEl.textContent = "Dealer"
+        this.rootEl.appendChild(nameEl)
+        this.handEl = document.createElement("ul")
+        this.hand.forEach( (card)=>{
+            let newCard = document.createElement("li")
+            newCard.textContent = card.toString()
+            this.rootEl.appendChild(newCard)
+        })
+        this.rootEl.appendChild(this.handEl)
+        this.sumEl = document.createElement("p")
+        this.rootEl.appendChild(this.sumEl)
+        this.messageEl = document.createElement("p")
+        this.rootEl.appendChild(this.messageEl)
+        this.rootEl.classList.add("player")
+    }
+}
+
+
+
+
+
+function evaluateHand(cards) {
+    let total = 0
+    let aces = 0
+    cards.forEach( (card)=>{   
+        total += card.getValue()
+        if (card.getRank() === "Ace") {
+            aces++
+        }
+    }) 
+    let soft = total < 21 && aces > 0
+    while (total > 21 && aces > 0) {
+        total -= 10
+        aces--
+    }
+    return { soft: soft, total: total}
+}
+
+
+let player = new Player("Player 1")
+let dealer = new Dealer()
+const dealerEl = document.getElementById("dealer")
+const playerEl = document.getElementById("player")
+dealer.attach(dealerEl)
+player.attach(playerEl)
+
+const hitButton = document.getElementById("hit")
+hitButton.addEventListener("click", (e) => {
+    player.hit()
+    if (player.state === "lost" || player.state === "won") {
+        dealer.play()
+    }
+})
+const standButton = document.getElementById("stand")
+standButton.addEventListener("click", (e) => {
+    player.stand()
+    dealer.play()
+})
+const startButton = document.getElementById("start")
+startButton.addEventListener("click", (e) => {
+    dealer.start()
+    player.start()
+})
+
+
+
+
